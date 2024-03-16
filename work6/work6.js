@@ -87,6 +87,7 @@ class App extends React.Component {
                 stdlist.push({ id: doc.id, ...doc.data() });
             });
             this.setState({ students: stdlist });
+            
         });
     }
     insertData() {
