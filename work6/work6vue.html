@@ -188,7 +188,6 @@
                         );
                 },
                 google_login() {
-                    // Using a popup.
                     var provider = new firebase.auth.GoogleAuthProvider();
                     provider.addScope("profile");
                     provider.addScope("email");
@@ -212,8 +211,6 @@
                             }
                         );
                 },
-
-
             },
             data() {
                 return {

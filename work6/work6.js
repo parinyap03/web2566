@@ -10,9 +10,9 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 db.collection("students").get().then((querySnapshot) => {
-  querySnapshot.forEach((doc) => {
-      console.log(`${doc.id} =>`,doc.data());
-  });
+    querySnapshot.forEach((doc) => {
+        console.log(`${doc.id} =>`, doc.data());
+    });
 });
 
 const RB = ReactBootstrap;
@@ -50,6 +50,8 @@ class App extends React.Component {
                 <Card.Body>
                     <Button onClick={() => this.readData()}>Read Data</Button>
                     <Button onClick={() => this.autoRead()}>Auto Read</Button>
+                    <Button onClick={() => this.googleLogin()}>Login</Button>
+                    <Button onClick={() => this.googleLogout()}>Logout</Button>
                     <div>
                         <StudentTable data={this.state.students} app={this} />
                     </div>
@@ -68,7 +70,27 @@ class App extends React.Component {
             </Card>
         );
     }
+    googleLogin = () => {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        provider.addScope("profile");
+        provider.addScope("email");
+        firebase.auth().signInWithPopup(provider)
+        .then((result) => {
+            // Handle successful login
+            const user = result.user;
+            console.log(user);
+          })
+          .catch((error) => {
+            // Handle login error
+            console.error(error);
+          });
+    }
 
+    googleLogout(){
+        if (window.confirm("Are you sure?")) {
+            firebase.auth().signOut();
+        }
+    }
     readData() {
         db.collection("students").get().then((querySnapshot) => {
             var stdlist = [];
@@ -87,7 +109,7 @@ class App extends React.Component {
                 stdlist.push({ id: doc.id, ...doc.data() });
             });
             this.setState({ students: stdlist });
-            
+
         });
     }
     insertData() {
@@ -165,4 +187,5 @@ function EditButton({ std, app }) {
 function DeleteButton({ std, app }) {
     return <button onClick={() => app.delete(std)}>ลบ</button>
 }
+
 
